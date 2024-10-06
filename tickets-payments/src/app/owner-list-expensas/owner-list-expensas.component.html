@@ -20,7 +20,17 @@
           <th scope="row" class="text-center">{{item.owner_id}}</th>
           <td class="text-center">{{item.emision_date | date:'MM/YYYY'}}</td>
           <td class="text-center">Total: {{ calculateTotal(item) | currency }}</td>
-          <td class="text-center">{{item.status}}</td>
+          <td class="text-center">
+            <span class="badge"
+                  [ngClass]="{
+                    'bg-success': item.status === 'PAID',
+                    'bg-danger': item.status === 'CANCELED',
+                    'bg-warning': item.status === 'PENDING'
+                  }">
+              {{ item.status }}
+            </span>
+          </td>
+          
           <td class="text-center"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ticketModal" (click)="selectTicket(item)">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-printer-fill" viewBox="0 0 16 16">
