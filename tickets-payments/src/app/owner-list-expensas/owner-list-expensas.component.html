@@ -1,0 +1,110 @@
+<div class="container">
+    <h2 class="mt-4">Hola propietario</h2>
+    <p>Aca podras visualizar el listado de expensas sus detalles</p>
+    <hr class="my-4">
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" class="text-center">Propietario</th>
+          <th scope="col" class="text-center">Periodo</th>
+          <th scope="col" class="text-center">TOTAL</th>
+          <th scope="col" class="text-center">Estado</th>
+          <th scope="col" class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of listallticket; track $index) {
+  
+        <tr>
+          <th scope="row" class="text-center">{{item.owner_id}}</th>
+          <td class="text-center">{{item.emision_date | date:'MM/YYYY'}}</td>
+          <td class="text-center">Total: {{ calculateTotal(item) | currency }}</td>
+          <td class="text-center">{{item.status}}</td>
+          <td class="text-center"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ticketModal" (click)="selectTicket(item)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-printer-fill" viewBox="0 0 16 16">
+                <path
+                  d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1">
+                </path>
+                <path
+                  d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1">
+                </path>
+              </svg>
+            </button></td>
+        </tr>
+  
+        }
+  
+  
+      </tbody>
+    </table>
+  </div>
+  
+  
+  
+  <!-- Modal -->
+  <div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ticketModalLabel">Factura - Ticket N° {{ ticketSelectedModal.id }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <strong>Dirigido a:</strong> {{ ticketSelectedModal.owner_id }}
+            </div>
+            <div class="col-md-6 text-end">
+              <strong>Fecha de emisión:</strong> {{ ticketSelectedModal.emision_date | date: 'dd/MM/yyyy' }}<br>
+              <strong>Fecha de expiración:</strong> {{ ticketSelectedModal.expiration_date | date: 'dd/MM/yyyy' }}
+            </div>
+          </div>
+          <hr>
+  
+          <table class="table table-bordered">
+            <thead class="table-warning">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Precio Unitario</th>
+                <th scope="col">Costo Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of ticketSelectedModal?.items; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price | currency }}</td>
+                <td>{{ (item.quantity * item.price) | currency }}</td>
+              </tr>
+            </tbody>
+          </table>
+  
+          <div class="row">
+            <div class="col-md-6">
+              <strong>Estado:</strong> 
+              <span [ngClass]="{
+                'badge bg-success': ticketSelectedModal.status === 'PAID',
+                'badge bg-danger': ticketSelectedModal.status === 'CANCELED',
+                'badge bg-warning': ticketSelectedModal.status === 'PENDING'
+              }">
+                {{ ticketSelectedModal.status }}
+              </span>
+            </div>
+            <div class="col-md-6 text-end">
+              <strong>Total:</strong> {{ calculateTotal(ticketSelectedModal) | currency }}
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary">Pagar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
