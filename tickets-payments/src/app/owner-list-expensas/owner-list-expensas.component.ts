@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { TicketDetail, TicketDto, TicketStatus } from '../models/TicketDto';
 import { CommonModule } from '@angular/common';
+import { MercadoPagoServiceService } from '../services/mercado-pago-service.service';
+import { TicketPayDto } from '../models/TicketPayDto';
 
 @Component({
   selector: 'app-owner-list-expensas',
@@ -10,7 +12,12 @@ import { CommonModule } from '@angular/common';
   styleUrl: './owner-list-expensas.component.css'
 })
 export class OwnerListExpensasComponent {
- 
+  requestData: TicketPayDto = {
+    idTicket: 0,
+    title: '',
+    description: '',
+    totalPrice: 0
+  };
   ticketSelectedModal: TicketDto = {
     id: 0,
     owner_id: 0,
@@ -54,9 +61,9 @@ export class OwnerListExpensasComponent {
       ]
     }
   ];
- 
 
-  calculateTotal( ticket: TicketDto): number {
+  constructor(private mercadopagoservice: MercadoPagoServiceService) { }
+  calculateTotal(ticket: TicketDto): number {
     let total = 0;
     if (ticket && ticket.items) {
       total = ticket.items.reduce((acc, item: TicketDetail) => {
@@ -66,8 +73,30 @@ export class OwnerListExpensasComponent {
     return total;
   }
 
-  selectTicket(ticket:TicketDto){
+  selectTicket(ticket: TicketDto) {
     this.ticketSelectedModal = ticket
- 
+
+  }
+  formatDate(date: Date): string {
+    const day = String(date.getDate()).padStart(2, '0'); // Asegúrate de que el día tenga 2 dígitos
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses en JS son 0 indexados
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+  pagar() {
+    this.requestData.idTicket = this.ticketSelectedModal.id
+    this.requestData.description = `Expensas de ${this.formatDate(this.ticketSelectedModal.emision_date)}`;
+    this.requestData.title = `Expensas de ${this.formatDate(this.ticketSelectedModal.emision_date)} con vencimiento: ${this.formatDate(this.ticketSelectedModal.expiration_date)}`;
+    this.requestData.totalPrice = this.calculateTotal(this.ticketSelectedModal)
+    console.log(this.requestData)
+    this.mercadopagoservice.crearPreferencia(this.requestData).subscribe(
+      (response) => {
+        console.log('Preferencia creada:', response);
+        this.mercadopagoservice.initMercadoPagoButton(response.id); // Aquí se asume que `response.id` es el `preferenceId`
+      },
+      (error) => {
+        console.error('Error al crear la preferencia:', error);
+      }
+    );
   }
 }
