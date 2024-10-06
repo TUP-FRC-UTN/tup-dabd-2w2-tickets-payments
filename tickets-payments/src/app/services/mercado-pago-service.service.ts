@@ -16,7 +16,7 @@ export class MercadoPagoServiceService {
   }
 
   initMercadoPagoButton(preferenceId: string): void {
-    const mp = new (window as any).MercadoPago('APP_USR-6dde02ef-5a92-4b88-a959-d4fb62cf9fa4');
+    const mp = new (window as any).MercadoPago('');
     const bricksBuilder = mp.bricks();
 
     bricksBuilder.create('wallet', 'wallet_container', {
