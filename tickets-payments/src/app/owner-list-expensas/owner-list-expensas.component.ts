@@ -3,11 +3,13 @@ import { TicketDetail, TicketDto, TicketStatus } from '../models/TicketDto';
 import { CommonModule } from '@angular/common';
 import { MercadoPagoServiceService } from '../services/mercado-pago-service.service';
 import { TicketPayDto } from '../models/TicketPayDto';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TicketService } from '../services/ticket.service';
 
 @Component({
   selector: 'app-owner-list-expensas',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './owner-list-expensas.component.html',
   styleUrl: './owner-list-expensas.component.css'
 })
@@ -24,7 +26,7 @@ export class OwnerListExpensasComponent {
     emision_date: new Date(),
     expiration_date: new Date(),
     status: TicketStatus.PENDING,
-    items: [] 
+    items: []
   };
   listallticket: TicketDto[] = [
     {
@@ -62,7 +64,49 @@ export class OwnerListExpensasComponent {
     }
   ];
 
-  constructor(private mercadopagoservice: MercadoPagoServiceService) { }
+  searchText = '';
+  filteredTickets: TicketDto[] = [];
+  fechasForm: FormGroup;
+  constructor(private mercadopagoservice: MercadoPagoServiceService, private formBuilder: FormBuilder, private ticketservice: TicketService) {
+    this.filteredTickets = this.listallticket;
+    this.fechasForm = this.formBuilder.group({
+      fechaInicio: [''],
+      fechaFin: ['']
+    });
+  }
+
+  enviarFechas() {
+    const fechas = this.fechasForm.value;
+    console.log('Fechas Enviadas:', fechas);
+
+    this.ticketservice.filtrarfechas(fechas.value)
+  }
+
+
+  searchTable() {
+    const searchTextLower = this.searchText.toLowerCase();
+    const searchNumber = parseFloat(this.searchText);
+
+    this.filteredTickets = this.listallticket.filter(ticket =>
+      ticket.owner_id.toString().includes(this.searchText) ||
+      ticket.items.some(item => item.name.toLowerCase().includes(searchTextLower)) ||
+      ticket.status.toString().includes(searchTextLower.toLocaleUpperCase()) ||
+      this.formatDate2(ticket.emision_date, 'MM/YYYY').includes(searchTextLower) ||
+      this.formatDate2(ticket.expiration_date, 'MM/YYYY').includes(searchTextLower) ||
+      (!isNaN(searchNumber) && this.calculateTotal(ticket) === searchNumber)
+    );
+  }
+  formatDate2(date: Date, format: string): string {
+    const pad = (num: number) => num < 10 ? '0' + num : num.toString();
+    if (format === 'MM/YYYY') {
+      return `${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
+    } else { 
+      const day = pad(date.getDate());
+      const month = pad(date.getMonth() + 1);
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+  }
   calculateTotal(ticket: TicketDto): number {
     let total = 0;
     if (ticket && ticket.items) {
@@ -78,8 +122,8 @@ export class OwnerListExpensasComponent {
 
   }
   formatDate(date: Date): string {
-    const day = String(date.getDate()).padStart(2, '0'); 
-    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   }
@@ -92,7 +136,7 @@ export class OwnerListExpensasComponent {
     this.mercadopagoservice.crearPreferencia(this.requestData).subscribe(
       (response) => {
         console.log('Preferencia creada:', response);
-        this.mercadopagoservice.initMercadoPagoButton(response.id); 
+        this.mercadopagoservice.initMercadoPagoButton(response.id);
       },
       (error) => {
         console.error('Error al crear la preferencia:', error);
