@@ -24,7 +24,7 @@ export class OwnerListExpensasComponent {
     emision_date: new Date(),
     expiration_date: new Date(),
     status: TicketStatus.PENDING,
-    items: [] // Inicializamos un array vacío de TicketDetail
+    items: [] 
   };
   listallticket: TicketDto[] = [
     {
@@ -78,8 +78,8 @@ export class OwnerListExpensasComponent {
 
   }
   formatDate(date: Date): string {
-    const day = String(date.getDate()).padStart(2, '0'); // Asegúrate de que el día tenga 2 dígitos
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses en JS son 0 indexados
+    const day = String(date.getDate()).padStart(2, '0'); 
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   }
@@ -92,7 +92,7 @@ export class OwnerListExpensasComponent {
     this.mercadopagoservice.crearPreferencia(this.requestData).subscribe(
       (response) => {
         console.log('Preferencia creada:', response);
-        this.mercadopagoservice.initMercadoPagoButton(response.id); // Aquí se asume que `response.id` es el `preferenceId`
+        this.mercadopagoservice.initMercadoPagoButton(response.id); 
       },
       (error) => {
         console.error('Error al crear la preferencia:', error);
