@@ -14,4 +14,11 @@ export class TicketService {
   filtrarfechas(dtobusqueda: any):Observable<any>{
     return this.http.post<any>(`${this.apiUrl}/search`, dtobusqueda);
   }
+
+// Método para obtener todos los tickets
+  getAllTickets(): Observable<TicketDto[]> 
+  {
+    return this.http.get<TicketDto[]>('http://localhost:8080/tickets/getAll');
+  }
+  
 }

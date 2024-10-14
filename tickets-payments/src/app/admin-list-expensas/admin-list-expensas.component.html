@@ -39,8 +39,8 @@
             @for (item of filteredTickets; track $index) {
 
             <tr>
-                <th scope="row" class="text-center">{{item.owner_id}}</th>
-                <td class="text-center">{{item.emision_date | date:'MM/YYYY'}}</td>
+                <th scope="row" class="text-center">{{item.id}}</th>
+                <td class="text-center">{{item.issueDate| date:'MM/YYYY'}}</td>
                 <td class="text-center">{{ calculateTotal(item) | currency }}</td>
                 <td class="text-center">
                     <span class="badge" [ngClass]="{
@@ -97,12 +97,12 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <strong>Dirigido a:</strong> {{ ticketSelectedModal.owner_id }}
+                        <strong>Dirigido a:</strong> {{ ticketSelectedModal.id }}
                     </div>
                     <div class="col-md-6 text-end">
-                        <strong>Fecha de emisión:</strong> {{ ticketSelectedModal.emision_date | date: 'dd/MM/yyyy'
+                        <strong>Fecha de emisión:</strong> {{ ticketSelectedModal.issueDate| date: 'dd/MM/yyyy'
                         }}<br>
-                        <strong>Fecha de expiración:</strong> {{ ticketSelectedModal.expiration_date | date:
+                        <strong>Fecha de expiración:</strong> {{ ticketSelectedModal.expirationDate | date:
                         'dd/MM/yyyy' }}
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                             <th scope="col">Costo Total</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <!-- <tbody>
                         <tr *ngFor="let item of ticketSelectedModal?.items; let i = index">
                             <td>{{ i + 1 }}</td>
                             <td>{{ item.name }}</td>
@@ -126,7 +126,7 @@
                             <td>{{ item.price | currency }}</td>
                             <td>{{ (item.quantity * item.price) | currency }}</td>
                         </tr>
-                    </tbody>
+                    </tbody> -->
                 </table>
 
                 <div class="row">
@@ -174,13 +174,13 @@
                         <h6 class="mb-0">ID Factura: <strong>{{ ticketSelectedModal.id }}</strong></h6>
                     </div>
                     <div class="col-md-6">
-                        <h6 class="mb-0">ID Propietario: <strong>{{ ticketSelectedModal.owner_id }}</strong></h6>
+                        <h6 class="mb-0">ID Propietario: <strong>{{ ticketSelectedModal.id }}</strong></h6>
                     </div>
                     <div class="col-md-6">
-                        <h6 class="mb-0">Fecha de Emisión: <strong>{{ ticketSelectedModal.emision_date | date: 'dd/MM/yyyy' }}</strong></h6>
+                        <h6 class="mb-0">Fecha de Emisión: <strong>{{ ticketSelectedModal.issueDate | date: 'dd/MM/yyyy' }}</strong></h6>
                     </div>
                     <div class="col-md-6">
-                        <h6 class="mb-0">Fecha de Expiración: <strong>{{ ticketSelectedModal.expiration_date | date: 'dd/MM/yyyy' }}</strong></h6>
+                        <h6 class="mb-0">Fecha de Expiración: <strong>{{ ticketSelectedModal.expirationDate | date: 'dd/MM/yyyy' }}</strong></h6>
                     </div>
                 </div>
                 <hr>
