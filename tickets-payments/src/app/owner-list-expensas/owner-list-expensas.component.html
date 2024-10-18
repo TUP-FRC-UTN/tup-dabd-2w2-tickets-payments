@@ -5,11 +5,12 @@
   <div class="row  d-flex mb-3 justify-content-center">
     <div class="col-md-6 justify-content-center">
       <label for="searchInput" class="form-label mb-0">Buscador general</label>
-      <input type="text" class="form-control" id="searchInput" [(ngModel)]="searchText" (input)="searchTable()" placeholder="Escribe para buscar...">
+      <input type="text" class="form-control" id="searchInput" [(ngModel)]="searchText" (input)="searchTable()"
+        placeholder="Escribe para buscar...">
     </div>
 
     <form [formGroup]="fechasForm" class="col-md-6 justify-content-center">
-      <div class="row g-3 justify-content-center align-items-end"> 
+      <div class="row g-3 justify-content-center align-items-end">
         <div class="col-md-4">
           <label for="fechaInicio" class="form-label mb-0">Fecha Inicio</label>
           <input type="date" class="form-control" formControlName="fechaInicio" id="fechaInicio">
@@ -51,18 +52,26 @@
           </span>
         </td>
 
-        <td class="text-center"><button type="button" class="btn btn-primary" data-bs-toggle="modal"
-            data-bs-target="#ticketModal" (click)="selectTicket(item)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-              class="bi bi-printer-fill" viewBox="0 0 16 16">
-              <path
-                d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1">
-              </path>
-              <path
-                d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1">
-              </path>
-            </svg>
-          </button></td>
+        <td class="text-center">
+          <div class="btn-group">
+            <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              Action
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ticketModal"
+                  (click)="selectTicket(item)">Ver expensa
+
+                </a></li>
+              <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#statusModal"
+                  (click)="selectTicket(item)">Pagar con transferencia</a></li>
+              <li><a class="dropdown-item">Pagar con Mercadopago</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item">Separated link</a></li>
+            </ul>
+          </div>
+        </td>
       </tr>
 
       }
@@ -138,5 +147,48 @@
 
       </div>
     </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal status -->
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="ticketModalLabel">Cargar comprobante de transferencia</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="row mb-4">
+                  <div class="col-md-6">
+                      <h6 class="mb-0">ID Factura: <strong>{{ ticketSelectedModal.id }}</strong></h6>
+                  </div>
+                  <div class="col-md-6">
+                      <h6 class="mb-0">ID Propietario: <strong>{{ ticketSelectedModal.owner_id }}</strong></h6>
+                  </div>
+                  <div class="col-md-6">
+                      <h6 class="mb-0">Fecha de Emisión: <strong>{{ ticketSelectedModal.emision_date | date: 'dd/MM/yyyy' }}</strong></h6>
+                  </div>
+                  <div class="col-md-6">
+                      <h6 class="mb-0">Fecha de Expiración: <strong>{{ ticketSelectedModal.expiration_date | date: 'dd/MM/yyyy' }}</strong></h6>
+                  </div>
+              </div>
+              <hr>
+              <div class="d-flex justify-content-center">
+                <div class="input-group mb-3">
+                  <input type="file" class="form-control" id="inputGroupFile02" (change)="onFileSelected($event)">
+                  <label class="input-group-text" for="inputGroupFile02">Subir comprobante</label>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-primary" [disabled]="!selectedFile" (click)="onUpload()">Cargar Comprobante</button>
+   
+          </div>
+      </div>
   </div>
 </div>

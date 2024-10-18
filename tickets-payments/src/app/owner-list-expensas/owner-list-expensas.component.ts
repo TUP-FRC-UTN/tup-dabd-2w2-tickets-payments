@@ -5,6 +5,7 @@ import { MercadoPagoServiceService } from '../services/mercado-pago-service.serv
 import { TicketPayDto } from '../models/TicketPayDto';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TicketService } from '../services/ticket.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-owner-list-expensas',
@@ -63,18 +64,35 @@ export class OwnerListExpensasComponent {
       ]
     }
   ];
-
+  selectedFile: File | null = null;
   searchText = '';
   filteredTickets: TicketDto[] = [];
   fechasForm: FormGroup;
-  constructor(private mercadopagoservice: MercadoPagoServiceService, private formBuilder: FormBuilder, private ticketservice: TicketService) {
+  constructor(private mercadopagoservice: MercadoPagoServiceService, private formBuilder: FormBuilder, private ticketservice: TicketService, private http: HttpClient) {
     this.filteredTickets = this.listallticket;
     this.fechasForm = this.formBuilder.group({
       fechaInicio: [''],
       fechaFin: ['']
     });
   }
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
 
+
+  onUpload(): void {
+    if (this.selectedFile) {
+      const formData = new FormData();
+      formData.append('file', this.selectedFile, this.selectedFile.name);
+
+      this.http.post('http://localhost:8080/api/files/upload', formData)
+        .subscribe(response => {
+          console.log('File uploaded successfully!', response);
+        }, error => {
+          console.error('Error uploading file:', error);
+        });
+    }
+  }
   enviarFechas() {
     const fechas = this.fechasForm.value;
     console.log('Fechas Enviadas:', fechas);
