@@ -9,7 +9,7 @@ import { tick } from '@angular/core/testing';
 })
 export class TicketService {
 
-  private apiUrl = 'http://localhost:8080/api/tickets';
+  private apiUrl = 'http://localhost:8080/tickets';
 
   private apiUrlPdf = 'http://localhost:8080/tickets/generateTicket/'; 
   

@@ -7,7 +7,7 @@ import { TicketPayDto } from '../models/TicketPayDto';
   providedIn: 'root'
 })
 export class MercadoPagoServiceService {  
-  private apiUrl = '/api/mercadopago/crear-preferencia';
+  private apiUrl = 'http://localhost:8081/payments/mercadopago/crear-preferencia';
 
   constructor(private http: HttpClient) {}
 
@@ -16,7 +16,7 @@ export class MercadoPagoServiceService {
   }
 
   initMercadoPagoButton(preferenceId: string): void {
-    const mp = new (window as any).MercadoPago('APP_USR-6dde02ef-5a92-4b88-a959-d4fb62cf9fa4');
+    const mp = new (window as any).MercadoPago('APP_USR-53e86e20-a9fc-40ef-8b6b-cb0b67a4a986');
     const bricksBuilder = mp.bricks();
 
     bricksBuilder.create('wallet', 'wallet_container', {

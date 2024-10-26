@@ -30,7 +30,7 @@
             <tr>
                 <th scope="col" class="text-center">Propietario</th>
                 <th scope="col" class="text-center">Periodo</th>
-                <th scope="col" class="text-center">TOTAL</th>
+                <th scope="col" class="text-center">Total</th>
                 <th scope="col" class="text-center">Estado</th>
                 <th scope="col" class="text-center">Acciones</th>
             </tr>
@@ -44,19 +44,19 @@
                 <td class="text-center">{{ calculateTotal(item) | currency }}</td>
                 <td class="text-center">
                     <span class="badge" [ngClass]="{
-                      'bg-success': item.status === 'PAID',
-                      'bg-danger': item.status === 'CANCELED',
-                      'bg-warning': item.status === 'PENDING'
-                    }">
-                        {{ item.status }}
-                    </span>
+                        'bg-success': item.status === 'PAGADO',
+                        'bg-danger': item.status === 'CANCELED',
+                        'bg-warning': item.status === 'PENDIENTE'
+                      }">
+                {{ item.status }}
+              </span>
                 </td>
                 <td class="text-center">
                 
                     <div class="btn-group">
                         <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            Action
+                            Acciones
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ticketModal"
@@ -70,7 +70,6 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item">Separated link</a></li>
                         </ul>
                     </div>
                 </td>
@@ -133,9 +132,9 @@
                     <div class="col-md-6">
                         <strong>Estado:</strong>
                         <span [ngClass]="{
-                  'badge bg-success': ticketSelectedModal.status === 'PAID',
+                  'badge bg-success': ticketSelectedModal.status === 'PAGADO',
                   'badge bg-danger': ticketSelectedModal.status === 'CANCELED',
-                  'badge bg-warning': ticketSelectedModal.status === 'PENDING'
+                  'badge bg-warning': ticketSelectedModal.status === 'PENDIENTE'
                 }">
                             {{ ticketSelectedModal.status }}
                         </span>

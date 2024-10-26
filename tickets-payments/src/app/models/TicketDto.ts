@@ -33,8 +33,8 @@ export interface TicketDetail {
 }
 
 export enum TicketStatus {
-  PENDING = 'PENDING',
-  PAID = 'PAID',
+  PENDING = 'PENDIENTE',
+  PAID = 'PAGADO',
   CANCELED = 'CANCELED'
 }
 
