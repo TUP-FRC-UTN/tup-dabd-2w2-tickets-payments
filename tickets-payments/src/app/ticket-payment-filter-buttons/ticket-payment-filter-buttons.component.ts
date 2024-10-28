@@ -50,7 +50,7 @@ export class TicketPaymentFilterButtonsComponent<
    */
   exportToPdf() {
     this.ticketService
-      .getAllTicketsPage(0, this.LIMIT_32BITS_MAX, true)
+      .getAllTicketsPage(0, this.LIMIT_32BITS_MAX)
       .subscribe(
         (response) => {
           this.excelService.exportListToPdf(
@@ -71,7 +71,7 @@ export class TicketPaymentFilterButtonsComponent<
   //#region TIENEN QUE MODIFICAR EL SERIVCIO CON SU GETALL
   exportToExcel() {
     this.ticketService
-      .getAllTicketsPage(0, this.LIMIT_32BITS_MAX, true)
+      .getAllTicketsPage(0, this.LIMIT_32BITS_MAX)
       .subscribe(
         (response) => {
           this.excelService.exportListToExcel(

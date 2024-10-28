@@ -20,6 +20,7 @@ import { TicketService } from '../services/ticket.service';
 import { HttpClient } from '@angular/common/http';
 import { TicketPaymentFilterButtonsComponent } from '../ticket-payment-filter-buttons/ticket-payment-filter-buttons.component';
 import { MainContainerComponent, TableComponent } from 'ngx-dabd-grupo01';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-owner-list-expensas',
   standalone: true,
@@ -28,7 +29,7 @@ import { MainContainerComponent, TableComponent } from 'ngx-dabd-grupo01';
     FormsModule,
     ReactiveFormsModule,
     TicketPaymentFilterButtonsComponent,TableComponent,
-    MainContainerComponent
+    MainContainerComponent, NgbPagination
   ],
   templateUrl: './owner-list-expensas.component.html',
   styleUrl: './owner-list-expensas.component.css',

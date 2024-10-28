@@ -33,8 +33,8 @@ export class TicketService {
 
   getAll(page : number, size : number): Observable<PaginatedResponse<TicketDto>> {
     let params = new HttpParams()
-    .set('page', 0)
-    .set('size', 10);
+    .set('page', page.toString())
+    .set('size', size.toString());
       
     return this.http.get<PaginatedResponse<TicketDto>>(this.apiCounter, { params }).pipe(
       map((response: PaginatedResponse<any>) => {
@@ -51,8 +51,8 @@ export class TicketService {
   getAllByOwner(page : number, size : number): Observable<PaginatedResponse<TicketDto>> {
     let params = new HttpParams()
     .set('ownerId', 1)
-    .set('page', 0)
-    .set('size', 10);
+    .set('page', page.toString())
+    .set('size', size.toString());
       
     return this.http.get<PaginatedResponse<TicketDto>>(this.api, { params }).pipe(
       map((response: PaginatedResponse<any>) => {
@@ -66,22 +66,18 @@ export class TicketService {
     );
   }
 
-  getAllTicketsPage(page : number, size : number, isActive? : boolean): Observable<PaginatedResponse<TicketDto>> {
+  getAllTicketsPage(page : number, size : number): Observable<PaginatedResponse<TicketDto>> {
     let params = new HttpParams()
     .set('page', page.toString())
     .set('size', size.toString());
   
-    if (isActive !== undefined) {
-      params = params.append('isActive', isActive.toString());
-    }
-    
-    return this.http.get<PaginatedResponse<TicketDto>>(this.apiUrl, { params }).pipe(
+    return this.http.get<PaginatedResponse<TicketDto>>(this.api, { params }).pipe(
       map((response: PaginatedResponse<any>) => {
         const transformPipe = new TransformTicketPipe();
         const transformedPlots = response.content.map((plot: any) => transformPipe.transform(plot));
         return {
           ...response,
-          content: transformedPlots 
+          content: transformedPlots   
         };
       })
     );

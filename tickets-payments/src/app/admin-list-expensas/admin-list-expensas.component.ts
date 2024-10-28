@@ -20,10 +20,17 @@ import { TicketService } from '../services/ticket.service';
 import { HttpClient } from '@angular/common/http';
 import { TicketPaymentFilterButtonsComponent } from '../ticket-payment-filter-buttons/ticket-payment-filter-buttons.component';
 import { MainContainerComponent, TableComponent } from 'ngx-dabd-grupo01';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-admin-list-expensas',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TicketPaymentFilterButtonsComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    TicketPaymentFilterButtonsComponent,
+    NgbPagination,
+  ],
   templateUrl: './admin-list-expensas.component.html',
   styleUrls: ['./admin-list-expensas.component.css'],
 })
@@ -87,7 +94,7 @@ export class AdminListExpensasComponent implements OnInit {
     ticketNumber: 'a',
     status: TicketStatus.PENDING,
     ticketDetails: [],
-    lotId:0
+    lotId: 0,
   };
 
   listallticket: TicketDto[] = [];
@@ -134,7 +141,14 @@ export class AdminListExpensasComponent implements OnInit {
       }
     );
   }
-
+  onPageChange(page: number) {
+    this.currentPage = --page;
+    this.confirmFilterPlot();
+  }
+  onItemsPerPageChange() {
+    --this.currentPage;
+    this.confirmFilterPlot();
+  }
   searchTable() {
     const searchTextLower = this.searchText.toLowerCase();
     const searchNumber = parseFloat(this.searchText);
