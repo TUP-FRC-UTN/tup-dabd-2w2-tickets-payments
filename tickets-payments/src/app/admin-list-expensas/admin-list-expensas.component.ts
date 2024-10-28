@@ -21,6 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { TicketPaymentFilterButtonsComponent } from '../ticket-payment-filter-buttons/ticket-payment-filter-buttons.component';
 import { MainContainerComponent, TableComponent } from 'ngx-dabd-grupo01';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateStatusTicketPipe } from '../pipes/translate-status-ticket.pipe';
 @Component({
   selector: 'app-admin-list-expensas',
   standalone: true,
@@ -30,6 +31,7 @@ import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     TicketPaymentFilterButtonsComponent,
     NgbPagination,
+    TranslateStatusTicketPipe
   ],
   templateUrl: './admin-list-expensas.component.html',
   styleUrls: ['./admin-list-expensas.component.css'],

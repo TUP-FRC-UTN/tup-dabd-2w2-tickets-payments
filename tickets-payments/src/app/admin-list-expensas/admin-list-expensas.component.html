@@ -189,7 +189,7 @@
             }}
           </th>
           <td class="text-center">{{ item.issueDate | date : "MM/YYYY" }}</td>
-          <td class="text-center">{{ calculateTotal(item) | currency }}</td>
+          <td class="text-center">{{ calculateTotal(item) | currency: '': 'symbol-narrow':'1.2-2':'es-ES' }}</td>
           <td class="text-center">
             <span
               class="badge border border-secondary text-success p-2"
@@ -199,7 +199,7 @@
                 'text-warning border-warning': item.status === 'PENDIENTE'
               }"
             >
-              {{ item.status }}
+              {{ item.status | translateStatusTicket }}
             </span>
           </td>
           <td class="text-center">
@@ -354,7 +354,7 @@
                 'badge bg-warning': ticketSelectedModal.status === 'PENDIENTE'
               }"
             >
-              {{ ticketSelectedModal.status }}
+              {{ ticketSelectedModal.status | translateStatusTicket}}
             </span>
           </div>
           <div class="col-md-6 text-end">
