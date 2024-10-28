@@ -26,7 +26,7 @@ export class AdminListExpensasComponent implements OnInit {
   
   ticketSelectedModal: TicketDto = {
     id: 0,
-    ownerId: 0,
+    ownerId: {id:0, first_name:'Esteban'},
     issueDate: new Date(),
     expirationDate: new Date(),
     status: TicketStatus.PENDING,
