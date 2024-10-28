@@ -337,7 +337,7 @@
             >
               <td>{{ i + 1 }}</td>
               <td>{{ item.description }}</td>
-              <td>{{ item.amount | currency }}</td>
+              <td>{{ item.amount | currency: '': 'symbol-narrow':'1.2-2':'es-ES' }}</td>
               <!-- <td>{{ item.price | currency }}</td> -->
               <!-- <td>{{ (item.quantity * item.price) | currency }}</td> -->
             </tr>
