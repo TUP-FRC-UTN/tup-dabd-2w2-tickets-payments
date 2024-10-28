@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import {
   PlotFilters,
   PlotStatusDictionary,
@@ -7,7 +7,7 @@ import {
   TicketDto,
   TicketStatus,
 } from '../models/TicketDto';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { MercadoPagoServiceService } from '../services/mercado-pago-service.service';
 import { TicketPayDto } from '../models/TicketPayDto';
 import {
@@ -21,6 +21,9 @@ import { HttpClient } from '@angular/common/http';
 import { TicketPaymentFilterButtonsComponent } from '../ticket-payment-filter-buttons/ticket-payment-filter-buttons.component';
 import { MainContainerComponent, TableComponent } from 'ngx-dabd-grupo01';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateStatusTicketPipe } from '../pipes/translate-status-ticket.pipe';
+import { CapitalizePipe } from '../pipes/capitalize.pipe';
+
 @Component({
   selector: 'app-owner-list-expensas',
   standalone: true,
@@ -29,7 +32,9 @@ import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     ReactiveFormsModule,
     TicketPaymentFilterButtonsComponent,TableComponent,
-    MainContainerComponent, NgbPagination
+    MainContainerComponent, NgbPagination,
+    TranslateStatusTicketPipe,
+    CapitalizePipe
   ],
   templateUrl: './owner-list-expensas.component.html',
   styleUrl: './owner-list-expensas.component.css',
