@@ -30,9 +30,9 @@ export interface TicketDto {
 }
 
 export const PlotTypeDictionary: { [key: string]: string } = {
-  "Comercial": "COMMERCIAL",
-  "Privado": "PRIVATE",
-  "Comunal": "COMMUNAL"
+  "Pagado": "PAID",
+  "Pendiente": "PENDING",
+  "Canceled": "CANCELED"
 };
 
 export const PlotStatusDictionary: { [key: string]: string } = {

@@ -153,12 +153,35 @@ export class OwnerListExpensasComponent {
         break;
 
       case 'PLOT_TYPE':
-        // this.filterPlotByType(this.translateCombo(this.filterInput, this.plotTypeDictionary));
+        this.filterPlotByType(this.translateCombo(this.filterInput, this.plotTypeDictionary));
         break;
 
       default:
         break;
     }
+  }
+
+  translateCombo(value: any, dictionary: any) {
+    if (value !== undefined && value !== null) {
+      return dictionary[value];
+    }
+    console.log("Algo salio mal.")
+    return;
+  }
+
+  filterPlotByType(plotType : string) {
+    this.ticketservice.filterTicketByStatus(this.currentPage, this.pageSize, plotType).subscribe(
+      response => {
+        console.log("Types retrieved succesfully:", response)
+        this.plotsList = response.content;
+        this.filteredPlotsList = [...this.plotsList]
+        this.lastPage = response.last
+        this.totalItems = response.totalElements;
+      },
+      error => {
+        console.error('Error getting plots:', error);
+      }
+    )
   }
 
   getAllPlots() {
@@ -313,14 +336,10 @@ export class OwnerListExpensasComponent {
   isButtonInitialized: boolean = false;
   pagar() {
     this.requestData.idTicket = this.ticketSelectedModal.id;
-    this.requestData.description = `Expensas de ${this.formatDate(
-      this.ticketSelectedModal.issueDate
-    )}`;
-    this.requestData.title = `Expensas de ${this.formatDate(
-      this.ticketSelectedModal.issueDate
-    )} con vencimiento: ${this.formatDate(
-      this.ticketSelectedModal.expirationDate
-    )}`;
+    this.requestData.description ='ads';// `Expensas de ${this.formatDate(this.ticketSelectedModal.issueDate)}`;
+    this.requestData.title = 'ads';//`Expensas de ${this.formatDate(this.ticketSelectedModal.issueDate )} con vencimiento: ${this.formatDate(
+      // this.ticketSelectedModal.expirationDate
+    // )}`;
     this.requestData.totalPrice = this.calculateTotal(this.ticketSelectedModal);
     console.log(this.requestData);
     this.mercadopagoservice.crearPreferencia(this.requestData).subscribe(

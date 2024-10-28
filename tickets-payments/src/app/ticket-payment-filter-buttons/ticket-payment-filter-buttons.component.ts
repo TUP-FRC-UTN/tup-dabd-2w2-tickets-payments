@@ -17,25 +17,25 @@ export class TicketPaymentFilterButtonsComponent<
   private excelService = inject(PaymentExcelService);
 
   private ticketService = inject(TicketService);
-   // Input to receive the HTML table from the parent
-   @Input() tableName!: HTMLTableElement;
-   // Input to receive a generic list from the parent component
-   @Input() itemsList!: T[];
-   // Input to redirect to the form.
-   @Input() formPath: string = "";
-   // Represent the name of the object for the exports.
-   // Se va a usar para los nombres de los archivos.
-   @Input() objectName : string = ""
-   // Represent the dictionaries of ur object.
-   // Se va a usar para las traducciones de enum del back.
-   @Input() dictionaries: Array<{ [key: string]: any }> = [];
- 
-   // Subject to emit filtered results
-   private filterSubject = new Subject<T[]>();
-   // Observable that emits filtered owner list
-   filter$ = this.filterSubject.asObservable();
- 
-   ngOnInit(): void {}
+  // Input to receive the HTML table from the parent
+  @Input() tableName!: HTMLTableElement;
+  // Input to receive a generic list from the parent component
+  @Input() itemsList!: T[];
+  // Input to redirect to the form.
+  @Input() formPath: string = '';
+  // Represent the name of the object for the exports.
+  // Se va a usar para los nombres de los archivos.
+  @Input() objectName: string = '';
+  // Represent the dictionaries of ur object.
+  // Se va a usar para las traducciones de enum del back.
+  @Input() dictionaries: Array<{ [key: string]: any }> = [];
+
+  // Subject to emit filtered results
+  private filterSubject = new Subject<T[]>();
+  // Observable that emits filtered owner list
+  filter$ = this.filterSubject.asObservable();
+
+  ngOnInit(): void {}
 
   getActualDayFormat() {
     const today = new Date();
@@ -49,19 +49,17 @@ export class TicketPaymentFilterButtonsComponent<
    * Calls the `exportTableToPdf` method from the `CadastreExcelService`.
    */
   exportToPdf() {
-    this.ticketService
-      .getAllTicketsPage(0, this.LIMIT_32BITS_MAX)
-      .subscribe(
-        (response) => {
-          this.excelService.exportListToPdf(
-            response.content,
-            `${this.getActualDayFormat()}_${this.objectName}`
-          );
-        },
-        (error) => {
-          console.log('Error retrieved all, on export component.');
-        }
-      );
+    this.ticketService.getAllTicketsPage(0, this.LIMIT_32BITS_MAX).subscribe(
+      (response) => {
+        this.excelService.exportListToPdf(
+          response.content,
+          `${this.getActualDayFormat()}_${this.objectName}`
+        );
+      },
+      (error) => {
+        console.log('Error retrieved all, on export component.');
+      }
+    );
   }
 
   /**
@@ -70,19 +68,17 @@ export class TicketPaymentFilterButtonsComponent<
    */
   //#region TIENEN QUE MODIFICAR EL SERIVCIO CON SU GETALL
   exportToExcel() {
-    this.ticketService
-      .getAllTicketsPage(0, this.LIMIT_32BITS_MAX)
-      .subscribe(
-        (response) => {
-          this.excelService.exportListToExcel(
-            response.content,
-            `${this.getActualDayFormat()}_${this.objectName}`
-          );
-        },
-        (error) => {
-          console.log('Error retrieved all, on export component.');
-        }
-      );
+    this.ticketService.getAllTicketsPage(0, this.LIMIT_32BITS_MAX).subscribe(
+      (response) => {
+        this.excelService.exportListToExcel(
+          response.content,
+          `${this.getActualDayFormat()}_${this.objectName}`
+        );
+      },
+      (error) => {
+        console.log('Error retrieved all, on export component.');
+      }
+    );
   }
 
   /**

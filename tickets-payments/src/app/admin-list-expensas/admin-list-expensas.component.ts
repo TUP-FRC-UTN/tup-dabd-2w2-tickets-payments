@@ -235,21 +235,21 @@ export class AdminListExpensasComponent implements OnInit {
     throw new Error('Method not implemented.');
   }
 
-  downloadPdf(ticketId: Number): void {
-    this.ticketservice.downloadPdf(ticketId).subscribe(
-      (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'example.pdf'; // Nombre del archivo descargado
-        link.click();
-        window.URL.revokeObjectURL(url); // Limpia la URL del blob después de la descarga
-      },
-      (error) => {
-        console.error('Error al descargar el PDF:', error);
-      }
-    );
-  }
+  // downloadPdf(ticketId: Number): void {
+  //   this.ticketservice.downloadPdf(ticketId).subscribe(
+  //     (blob) => {
+  //       const url = window.URL.createObjectURL(blob);
+  //       const link = document.createElement('a');
+  //       link.href = url;
+  //       link.download = 'example.pdf'; // Nombre del archivo descargado
+  //       link.click();
+  //       window.URL.revokeObjectURL(url); // Limpia la URL del blob después de la descarga
+  //     },
+  //     (error) => {
+  //       console.error('Error al descargar el PDF:', error);
+  //     }
+  //   );
+  // }
 
   //#region APLICACION DE FILTROS
   changeActiveFilter(isActive?: boolean) {

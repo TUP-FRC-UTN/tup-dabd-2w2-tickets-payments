@@ -48,6 +48,25 @@ export class TicketService {
     );
   }
 
+  filterTicketByStatus(page : number, size : number, plotType : string) {
+    let params = new HttpParams()
+    .set('ownerId', 1)
+    .set('status', 'PAID')
+    .set('page', page.toString())
+    .set('size', size.toString());
+  
+    return this.http.get<PaginatedResponse<TicketDto>>(this.api, { params }).pipe(
+      map((response: PaginatedResponse<any>) => {
+        const transformPipe = new TransformTicketPipe();
+        const transformedPlots = response.content.map((plot: any) => transformPipe.transform(plot));
+        return {
+          ...response,
+          content: transformedPlots 
+        };
+      })
+    );
+  }
+
   getAllByOwner(page : number, size : number): Observable<PaginatedResponse<TicketDto>> {
     let params = new HttpParams()
     .set('ownerId', 1)

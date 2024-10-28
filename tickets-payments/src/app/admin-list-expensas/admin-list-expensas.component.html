@@ -118,7 +118,7 @@
       </div>
     </div>
 
-    <div
+    <!-- <div
       class="btn-group"
       role="group"
       aria-label="Basic radio toggle button group"
@@ -157,7 +157,7 @@
         (change)="changeActiveFilter()"
       />
       <label class="btn btn-outline-primary" for="btnradio3">Todos</label>
-    </div>
+    </div> -->
   </div>
   <div class="table-container">
     <table
@@ -185,11 +185,18 @@
                 item.ownerId.second_name +
                 " " +
                 item.ownerId.last_name +
-                " (" +item.lotId + ")"
+                " (" +
+                item.lotId +
+                ")"
             }}
           </th>
           <td class="text-center">{{ item.issueDate | date : "MM/YYYY" }}</td>
-          <td class="text-center">{{ calculateTotal(item) | currency: '': 'symbol-narrow':'1.2-2':'es-ES' }}</td>
+          <td class="text-center">
+            {{
+              calculateTotal(item)
+                | currency : "" : "symbol-narrow" : "1.2-2" : "es-ES"
+            }}
+          </td>
           <td class="text-center">
             <span
               class="badge border border-secondary text-success p-2"
@@ -205,11 +212,11 @@
           <td class="text-center">
             <div class="btn-group">
               <button
-                type="button"
-                class="btn btn-dark dropdown-toggle"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
+                  type="button"
+                  class="btn btn-sm btn-secondary dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
               <ul class="dropdown-menu">
@@ -231,14 +238,14 @@
                     >Cambiar estado</a
                   >
                 </li>
-                <li>
+                <!-- <li>
                   <a class="dropdown-item" (click)="downloadPdf(item.id)"
                     >Descargar PDF</a
                   >
-                </li>
-                <li>
+                </li> -->
+                <!-- <li>
                   <hr class="dropdown-divider" />
-                </li>
+                </li> -->
               </ul>
             </div>
           </td>
@@ -246,7 +253,6 @@
         }
       </tbody>
     </table>
-    
   </div>
   <div class="d-flex justify-content-between align-items-center mt-3">
     <ngb-pagination
@@ -273,7 +279,6 @@
       </select>
     </div>
   </div>
-  
 </div>
 
 <!-- Modal payment -->
@@ -337,7 +342,12 @@
             >
               <td>{{ i + 1 }}</td>
               <td>{{ item.description }}</td>
-              <td>{{ item.amount | currency: '': 'symbol-narrow':'1.2-2':'es-ES' }}</td>
+              <td>
+                {{
+                  item.amount
+                    | currency : "" : "symbol-narrow" : "1.2-2" : "es-ES"
+                }}
+              </td>
               <!-- <td>{{ item.price | currency }}</td> -->
               <!-- <td>{{ (item.quantity * item.price) | currency }}</td> -->
             </tr>
@@ -354,7 +364,7 @@
                 'badge bg-warning': ticketSelectedModal.status === 'PENDIENTE'
               }"
             >
-              {{ ticketSelectedModal.status | translateStatusTicket}}
+              {{ ticketSelectedModal.status | translateStatusTicket }}
             </span>
           </div>
           <div class="col-md-6 text-end">
@@ -401,12 +411,22 @@
         <div class="row mb-4">
           <div class="col-md-6">
             <h6 class="mb-0">
-              ID Factura: <strong>{{ ticketSelectedModal.id }}</strong>
+              ID Factura:
+              <strong>{{ ticketSelectedModal.ticketNumber }}</strong>
             </h6>
           </div>
           <div class="col-md-6">
             <h6 class="mb-0">
-              ID Propietario: <strong>{{ ticketSelectedModal.id }}</strong>
+              ID Propietario:
+              <strong>
+                {{
+                  ticketSelectedModal.ownerId.first_name +
+                    " " +
+                    ticketSelectedModal.ownerId.second_name +
+                    " " +
+                    ticketSelectedModal.ownerId.last_name
+                }}
+              </strong>
             </h6>
           </div>
           <div class="col-md-6">
