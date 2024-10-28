@@ -19,6 +19,7 @@ import {
 import { TicketService } from '../services/ticket.service';
 import { HttpClient } from '@angular/common/http';
 import { TicketPaymentFilterButtonsComponent } from '../ticket-payment-filter-buttons/ticket-payment-filter-buttons.component';
+import { MainContainerComponent, TableComponent } from 'ngx-dabd-grupo01';
 @Component({
   selector: 'app-owner-list-expensas',
   standalone: true,
@@ -26,7 +27,8 @@ import { TicketPaymentFilterButtonsComponent } from '../ticket-payment-filter-bu
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    TicketPaymentFilterButtonsComponent,
+    TicketPaymentFilterButtonsComponent,TableComponent,
+    MainContainerComponent
   ],
   templateUrl: './owner-list-expensas.component.html',
   styleUrl: './owner-list-expensas.component.css',
@@ -86,10 +88,12 @@ export class OwnerListExpensasComponent {
 
   ticketSelectedModal: TicketDto = {
     id: 0,
-    ownerId: {id:1, first_name:'Esteban'},
+    ownerId: {id:1, first_name:'Esteban', last_name:'', second_name:''},
     issueDate: new Date(),
     expirationDate: new Date(),
     status: TicketStatus.PENDING,
+    ticketNumber:'xx',
+    lotId:0,
     ticketDetails: [
       { id: 1, amount: 20, description: 'Description of Item A' },
     ],

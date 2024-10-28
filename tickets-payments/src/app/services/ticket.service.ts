@@ -16,6 +16,7 @@ export class TicketService {
   private apiUrlPdf = 'http://localhost:8080/tickets/generateTicket/'; 
 
   private api = 'http://localhost:8080/tickets/getAllTicketsByOwner';
+  private apiCounter = 'http://localhost:8080/tickets/getAll';
   
 
   constructor(private http: HttpClient) { }
@@ -30,11 +31,28 @@ export class TicketService {
     return this.http.get<TicketDto[]>('http://localhost:8080/tickets/getAll');
   }
 
+  getAll(page : number, size : number): Observable<PaginatedResponse<TicketDto>> {
+    let params = new HttpParams()
+    .set('page', 0)
+    .set('size', 10);
+      
+    return this.http.get<PaginatedResponse<TicketDto>>(this.apiCounter, { params }).pipe(
+      map((response: PaginatedResponse<any>) => {
+        const transformPipe = new TransformTicketPipe();
+        const transformedPlots = response.content.map((plot: any) => transformPipe.transform(plot));
+        return {
+          ...response,
+          content: transformedPlots 
+        };
+      })
+    );
+  }
+
   getAllByOwner(page : number, size : number): Observable<PaginatedResponse<TicketDto>> {
     let params = new HttpParams()
     .set('ownerId', 1)
-    .set('page', 2)
-    .set('size', 4);
+    .set('page', 0)
+    .set('size', 10);
       
     return this.http.get<PaginatedResponse<TicketDto>>(this.api, { params }).pipe(
       map((response: PaginatedResponse<any>) => {

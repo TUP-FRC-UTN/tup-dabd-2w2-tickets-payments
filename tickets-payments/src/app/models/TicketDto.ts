@@ -1,31 +1,3 @@
-// export interface TicketDetail {
-//     id: number;
-//     name: string;
-//     description: string;
-//     quantity: number;
-//     price: number; 
-//   }
-  
-//   export enum TicketStatus {
-//     PENDING = 'PENDING',
-//     PAID = 'PAID',
-//     CANCELED = 'CANCELED'
-//   }
-  
-//   export interface TicketDto {
-  
-//     id: number;
-  
-//     owner_id: number;
-  
-//     emision_date: Date;
-  
-//     expiration_date: Date;
-
-//     status: TicketStatus;
-  
-//     items: TicketDetail[];
-//   }
 export interface TicketDetail {
   id: number;
   description: string;  // Cambiado de 'name'
@@ -34,13 +6,15 @@ export interface TicketDetail {
 
 export enum TicketStatus {
   PENDING = 'PENDIENTE',
-  PAID = 'PAGADO',
+  PAID = 'PAID',
   CANCELED = 'CANCELED'
 }
 
 export interface Owner{
   id: number,
-  first_name: string
+  first_name: string,
+  second_name: string,
+  last_name: string
 }
 
 export interface TicketDto {
@@ -49,6 +23,8 @@ export interface TicketDto {
   issueDate: Date;               // Cambiado de 'emision_date'
   expirationDate: Date;          // Cambiado de 'expiration_date'
   status: TicketStatus;
+  ticketNumber: string;
+  lotId: number;
   ticketDetails: TicketDetail[]; // Cambiado de 'items'
 
 }

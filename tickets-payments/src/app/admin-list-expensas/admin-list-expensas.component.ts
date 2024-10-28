@@ -1,56 +1,109 @@
-import { Component, OnInit } from '@angular/core';
-import { TicketDetail, TicketDto, TicketStatus } from '../models/TicketDto';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  PlotFilters,
+  PlotStatusDictionary,
+  PlotTypeDictionary,
+  TicketDetail,
+  TicketDto,
+  TicketStatus,
+} from '../models/TicketDto';
 import { CommonModule } from '@angular/common';
-import * as bootstrap from 'bootstrap'; // Importa Bootstrap JS
 import { MercadoPagoServiceService } from '../services/mercado-pago-service.service';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TicketService } from '../services/ticket.service';
 import { TicketPayDto } from '../models/TicketPayDto';
-import { Observable } from 'rxjs';
-
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { TicketService } from '../services/ticket.service';
+import { HttpClient } from '@angular/common/http';
+import { TicketPaymentFilterButtonsComponent } from '../ticket-payment-filter-buttons/ticket-payment-filter-buttons.component';
+import { MainContainerComponent, TableComponent } from 'ngx-dabd-grupo01';
 @Component({
   selector: 'app-admin-list-expensas',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TicketPaymentFilterButtonsComponent],
   templateUrl: './admin-list-expensas.component.html',
-  styleUrls: ['./admin-list-expensas.component.css']
+  styleUrls: ['./admin-list-expensas.component.css'],
 })
 export class AdminListExpensasComponent implements OnInit {
+  //#region ATT de PAGINADO
+  currentPage: number = 0;
+  pageSize: number = 10;
+  sizeOptions: number[] = [10, 25, 50];
+  plotsList: TicketDto[] = [];
+  filteredPlotsList: TicketDto[] = [];
+  lastPage: boolean | undefined;
+  totalItems: number = 0;
+  //#endregion
+  //#region NgOnInit | BUSCAR
+  ngOnInit() {
+    this.confirmFilterPlot();
+  }
 
+  ngAfterViewInit(): void {
+    this.filterComponent.filter$.subscribe((filteredList: TicketDto[]) => {
+      this.filteredPlotsList = filteredList;
+      this.currentPage = 0;
+    });
+  }
+
+  //#region ATT de DICCIONARIOS
+  plotTypeDictionary = PlotTypeDictionary;
+  plotStatusDictionary = PlotStatusDictionary;
+  plotDictionaries = [this.plotTypeDictionary, this.plotStatusDictionary];
+  //#endregion
+
+  //#region ATT de ACTIVE
+  retrievePlotsByActive: boolean | undefined = true;
+  //#endregion
+
+  //#region ATT de FILTROS
+  applyFilterWithNumber: boolean = false;
+  applyFilterWithCombo: boolean = false;
+  contentForFilterCombo: string[] = [];
+  actualFilter: string | undefined = PlotFilters.NOTHING;
+  filterTypes = PlotFilters;
+  filterInput: string = '';
+  //#endregion
+
+  @ViewChild('filterComponent')
+  filterComponent!: TicketPaymentFilterButtonsComponent<TicketDto>;
+  @ViewChild('ticketsTable', { static: true })
+  tableName!: ElementRef<HTMLTableElement>;
   requestData: TicketPayDto = {
     idTicket: 0,
     title: '',
     description: '',
-    totalPrice: 0
+    totalPrice: 0,
   };
-  
+
   ticketSelectedModal: TicketDto = {
     id: 0,
-    ownerId: {id:0, first_name:'Esteban'},
+    ownerId: { id: 0, first_name: 'Esteban', second_name: '', last_name: '' },
     issueDate: new Date(),
     expirationDate: new Date(),
+    ticketNumber: 'a',
     status: TicketStatus.PENDING,
-    ticketDetails: []
+    ticketDetails: [],
+    lotId:0
   };
-  
+
   listallticket: TicketDto[] = [];
   searchText = '';
   filteredTickets: TicketDto[] = [];
   fechasForm: FormGroup;
 
   constructor(
-    private mercadopagoservice: MercadoPagoServiceService, 
-    private formBuilder: FormBuilder, 
+    private mercadopagoservice: MercadoPagoServiceService,
+    private formBuilder: FormBuilder,
     private ticketservice: TicketService
   ) {
     this.fechasForm = this.formBuilder.group({
       fechaInicio: [''],
-      fechaFin: ['']
+      fechaFin: [''],
     });
-  }
-
-  ngOnInit(): void {
-    this.getTickets();
   }
 
   // Método para obtener todos los tickets usando el servicio
@@ -65,7 +118,7 @@ export class AdminListExpensasComponent implements OnInit {
       },
       complete: () => {
         console.log('Obtención de tickets completada.');
-      }
+      },
     });
   }
 
@@ -86,21 +139,30 @@ export class AdminListExpensasComponent implements OnInit {
     const searchTextLower = this.searchText.toLowerCase();
     const searchNumber = parseFloat(this.searchText);
 
-    this.filteredTickets = this.listallticket.filter(ticket =>
-      ticket.ownerId.toString().includes(this.searchText) ||
-      ticket.ticketDetails.some(item => item.description.toLowerCase().includes(searchTextLower)) ||
-      ticket.status.toString().includes(searchTextLower.toLocaleUpperCase()) ||
-      this.formatDate2(ticket.issueDate, 'MM/YYYY').includes(searchTextLower) ||
-      this.formatDate2(ticket.expirationDate, 'MM/YYYY').includes(searchTextLower) ||
-      (!isNaN(searchNumber) && this.calculateTotal(ticket) === searchNumber)
+    this.filteredTickets = this.listallticket.filter(
+      (ticket) =>
+        ticket.ownerId.toString().includes(this.searchText) ||
+        ticket.ticketDetails.some((item) =>
+          item.description.toLowerCase().includes(searchTextLower)
+        ) ||
+        ticket.status
+          .toString()
+          .includes(searchTextLower.toLocaleUpperCase()) ||
+        this.formatDate2(ticket.issueDate, 'MM/YYYY').includes(
+          searchTextLower
+        ) ||
+        this.formatDate2(ticket.expirationDate, 'MM/YYYY').includes(
+          searchTextLower
+        ) ||
+        (!isNaN(searchNumber) && this.calculateTotal(ticket) === searchNumber)
     );
   }
 
   formatDate2(date: Date, format: string): string {
-    const pad = (num: number) => num < 10 ? '0' + num : num.toString();
+    const pad = (num: number) => (num < 10 ? '0' + num : num.toString());
     if (format === 'MM/YYYY') {
       return `${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
-    } else { 
+    } else {
       const day = pad(date.getDate());
       const month = pad(date.getMonth() + 1);
       const year = date.getFullYear();
@@ -120,7 +182,7 @@ export class AdminListExpensasComponent implements OnInit {
 
   selectTicket(ticket: TicketDto) {
     this.ticketSelectedModal = ticket;
-    console.log('Ticket seleccionado:', this.ticketSelectedModal); 
+    console.log('Ticket seleccionado:', this.ticketSelectedModal);
   }
 
   formatDate(date: Date): string {
@@ -132,8 +194,14 @@ export class AdminListExpensasComponent implements OnInit {
 
   pagar() {
     this.requestData.idTicket = this.ticketSelectedModal.id;
-    this.requestData.description = `Expensas de ${this.formatDate(this.ticketSelectedModal.issueDate)}`;
-    this.requestData.title = `Expensas de ${this.formatDate(this.ticketSelectedModal.issueDate)} con vencimiento: ${this.formatDate(this.ticketSelectedModal.expirationDate)}`;
+    this.requestData.description = `Expensas de ${this.formatDate(
+      this.ticketSelectedModal.issueDate
+    )}`;
+    this.requestData.title = `Expensas de ${this.formatDate(
+      this.ticketSelectedModal.issueDate
+    )} con vencimiento: ${this.formatDate(
+      this.ticketSelectedModal.expirationDate
+    )}`;
     this.requestData.totalPrice = this.calculateTotal(this.ticketSelectedModal);
     console.log(this.requestData);
     this.mercadopagoservice.crearPreferencia(this.requestData).subscribe(
@@ -152,19 +220,101 @@ export class AdminListExpensasComponent implements OnInit {
   }
 
   downloadPdf(ticketId: Number): void {
-    this.ticketservice.downloadPdf(ticketId).subscribe((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'example.pdf'; // Nombre del archivo descargado
-      link.click();
-      window.URL.revokeObjectURL(url); // Limpia la URL del blob después de la descarga
-    }, error => {
-      console.error('Error al descargar el PDF:', error);
-    });
+    this.ticketservice.downloadPdf(ticketId).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'example.pdf'; // Nombre del archivo descargado
+        link.click();
+        window.URL.revokeObjectURL(url); // Limpia la URL del blob después de la descarga
+      },
+      (error) => {
+        console.error('Error al descargar el PDF:', error);
+      }
+    );
   }
 
+  //#region APLICACION DE FILTROS
+  changeActiveFilter(isActive?: boolean) {
+    this.retrievePlotsByActive = isActive;
+    this.confirmFilterPlot();
+  }
 
+  confirmFilterPlot() {
+    switch (this.actualFilter) {
+      case 'NOTHING':
+        this.getAllPlots();
+        break;
 
+      case 'BLOCK_NUMBER':
+        // this.filterPlotByBlock(this.filterInput);
+        break;
 
+      case 'PLOT_STATUS':
+        // this.filterPlotByStatus(this.translateCombo(this.filterInput, this.plotStatusDictionary));
+        break;
+
+      case 'PLOT_TYPE':
+        // this.filterPlotByType(this.translateCombo(this.filterInput, this.plotTypeDictionary));
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  getAllPlots() {
+    this.ticketservice.getAll(this.currentPage, this.pageSize).subscribe(
+      (response) => {
+        console.log('Types retrieved succesfully:', response);
+        this.plotsList = response.content;
+        this.filteredPlotsList = [...this.plotsList];
+        this.lastPage = response.last;
+        this.totalItems = response.totalElements;
+      },
+      (error) => {
+        console.error('Error getting plots:', error);
+      }
+    );
+  }
+
+  changeFilterMode(mode: PlotFilters) {
+    switch (mode) {
+      case PlotFilters.NOTHING:
+        this.actualFilter = PlotFilters.NOTHING;
+        this.applyFilterWithNumber = false;
+        this.applyFilterWithCombo = false;
+        this.confirmFilterPlot();
+        break;
+
+      case PlotFilters.BLOCK_NUMBER:
+        this.actualFilter = PlotFilters.BLOCK_NUMBER;
+        this.applyFilterWithNumber = true;
+        this.applyFilterWithCombo = false;
+        break;
+
+      case PlotFilters.PLOT_STATUS:
+        this.actualFilter = PlotFilters.PLOT_STATUS;
+        this.contentForFilterCombo = this.getKeys(this.plotStatusDictionary);
+        this.applyFilterWithNumber = false;
+        this.applyFilterWithCombo = true;
+        break;
+
+      case PlotFilters.PLOT_TYPE:
+        this.actualFilter = PlotFilters.PLOT_TYPE;
+        this.contentForFilterCombo = this.getKeys(this.plotTypeDictionary);
+        this.applyFilterWithNumber = false;
+        this.applyFilterWithCombo = true;
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  //#region USO DE DICCIONARIOS
+  getKeys(dictionary: any) {
+    return Object.keys(dictionary);
+  }
 }

@@ -12,9 +12,11 @@ export class TransformTicketPipe implements PipeTransform {
       id: ticketDto.id,
       expirationDate: ticketDto.expirationDate.toString(),
       issueDate: ticketDto.issueDate.toString(),
-      ownerId: ticketDto.ownerId,
+      ownerId: ticketDto.owner,
       status: ticketDto.status,
-      ticketDetails: ticketDto.ticketDetails
+      ticketNumber: ticketDto.ticketNumber,
+      ticketDetails: ticketDto.ticketDetails,
+      lotId: ticketDto.lotId.toString(),
     };
   }
 

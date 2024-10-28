@@ -1,7 +1,5 @@
-
 <div class="container">
   <h2 class="mt-4">Hola Propietario</h2>
-  <p>Aca podras visualizar el listado de expensas sus detalles</p>
   <hr class="my-4" />
   <div class="row d-flex mb-3 justify-content-center">
     <!-- <div class="col-md-6 justify-content-center">
@@ -135,7 +133,7 @@
         checked
       />
       <label class="btn btn-outline-primary" for="btnradio1"
-        >Lotes Activos</label
+        >Expensa Pagada</label
       >
 
       <input
@@ -147,7 +145,7 @@
         (change)="changeActiveFilter(false)"
       />
       <label class="btn btn-outline-primary" for="btnradio2"
-        >Lotes Inactivos</label
+        >Expensa Pendiente</label
       >
 
       <input
@@ -179,7 +177,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (item of plotsList; track $index) {
+        @for (item of filteredPlotsList; track $index) {
 
         <tr>
           <th scope="row" class="text-center">
@@ -191,11 +189,11 @@
           <td class="text-center">{{ calculateTotal(item) | currency }}</td>
           <td class="text-center">
             <span
-              class="badge"
+              class="badge border border-secondary text-success p-2"
               [ngClass]="{
-                'bg-success': item.status === 'PAGADO',
-                'bg-danger': item.status === 'CANCELED',
-                'bg-warning': item.status === 'PENDIENTE'
+                'text-success border-success': item.status === 'PAID',
+                'text-danger border-danger': item.status === 'CANCELED',
+                'text-warning border-warning': item.status === 'PENDIENTE'
               }"
             >
               {{ item.status }}
@@ -210,7 +208,7 @@
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Accion
+                <i class="bi bi-three-dots-vertical"></i>
               </button>
               <ul class="dropdown-menu">
                 <li>
@@ -228,7 +226,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#statusModal"
                     (click)="selectTicket(item)"
-                    >Pagar con transferencia</a
+                    >Pagar con Transferencia</a
                   >
                 </li>
                 <li>
@@ -248,8 +246,6 @@
       </tbody>
     </table>
   </div>
-
-  
 </div>
 
 <!-- Modal -->
@@ -264,7 +260,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="ticketModalLabel">
-          Factura - Ticket N° {{ ticketSelectedModal.id }}
+          Factura - Ticket N° {{ ticketSelectedModal.ticketNumber }}
         </h5>
         <button
           type="button"
@@ -276,7 +272,14 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-md-6">
-            <strong>Dirigido a:</strong> {{ ticketSelectedModal.id }}
+            <strong>Dirigido a:</strong>
+            {{
+              ticketSelectedModal.ownerId.first_name +
+                " " +
+                ticketSelectedModal.ownerId.second_name +
+                " " +
+                ticketSelectedModal.ownerId.last_name
+            }}
           </div>
           <div class="col-md-6 text-end">
             <strong>Fecha de emisión:</strong>
@@ -293,7 +296,7 @@
               <th scope="col">#</th>
               <th scope="col">Descripción</th>
               <th scope="col">Cantidad</th>
-              <th scope="col">Precio Unitario</th>
+              <!-- <th scope="col">Precio Unitario</th> -->
               <th scope="col">Costo Total</th>
             </tr>
           </thead>
@@ -318,7 +321,7 @@
             <strong>Estado:</strong>
             <span
               [ngClass]="{
-                'badge bg-success': ticketSelectedModal.status === 'PAGADO',
+                'badge bg-success': ticketSelectedModal.status === 'PAID',
                 'badge bg-danger': ticketSelectedModal.status === 'CANCELED',
                 'badge bg-warning': ticketSelectedModal.status === 'PENDIENTE'
               }"
@@ -368,12 +371,20 @@
         <div class="row mb-4">
           <div class="col-md-6">
             <h6 class="mb-0">
-              ID Factura: <strong>{{ ticketSelectedModal.id }}</strong>
+              ID Factura:
+              <strong>{{ ticketSelectedModal.ticketNumber }}</strong>
             </h6>
           </div>
           <div class="col-md-6">
             <h6 class="mb-0">
-              ID Propietario: <strong>{{ ticketSelectedModal.id }}</strong>
+              Nombre Propietario:
+              <strong>{{
+                ticketSelectedModal.ownerId.first_name +
+                  " " +
+                  ticketSelectedModal.ownerId.second_name +
+                  " " +
+                  ticketSelectedModal.ownerId.last_name
+              }}</strong>
             </h6>
           </div>
           <div class="col-md-6">
