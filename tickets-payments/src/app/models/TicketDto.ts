@@ -32,7 +32,7 @@ export interface TicketDto {
 export const PlotTypeDictionary: { [key: string]: string } = {
   "Pagado": "PAID",
   "Pendiente": "PENDING",
-  "Canceled": "CANCELED"
+  "Cancelado": "CANCELED"
 };
 
 export const PlotStatusDictionary: { [key: string]: string } = {

@@ -241,16 +241,6 @@
   </div>
 
   <div class="d-flex justify-content-between align-items-center mt-3">
-    <ngb-pagination
-      [(page)]="currentPage"
-      [pageSize]="pageSize"
-      [collectionSize]="totalItems"
-      (pageChange)="onPageChange($event)"
-      [maxSize]="5"
-      [boundaryLinks]="false"
-    ></ngb-pagination>
-
-    <div class="ms-auto"></div>
 
     <div class="form-group mb-3 me-2">
       <select
@@ -260,10 +250,21 @@
         (change)="onItemsPerPageChange()"
       >
         @for(option of sizeOptions; track $index) {
-        <option [value]="option">{{ option }} Elementos</option>
+        <option [value]="option">{{ option }}</option>
         }
       </select>
     </div>
+
+    <div class="ms-auto"></div>
+
+    <ngb-pagination
+      [(page)]="currentPage"
+      [pageSize]="pageSize"
+      [collectionSize]="totalItems"
+      (pageChange)="onPageChange($event)"
+      [maxSize]="5"
+      [boundaryLinks]="false"
+    ></ngb-pagination>
   </div>
 </div>
 

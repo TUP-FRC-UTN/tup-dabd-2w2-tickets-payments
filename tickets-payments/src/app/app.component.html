@@ -4,37 +4,36 @@
         <div class="bg-dark col-2 min-vh-100">
             <div class="bg-dark p-2">
                 <a class="d-flex text-decoration-none mt-1 justify-content-center align-items-center text-white text-center">
-                    <span class="fs-4 text-center">Menu Expensas</span>
+                    <span class="fs-5 text-center">Menu Expensas</span> <!-- Tamaño de fuente común -->
                 </a>
                 <ul class="nav nav-pills flex-column mt-4">
                     <li class="nav-item">
                         <a class="nav-link text-white" [routerLink]="'owner-list-expensas'">
-                          <span class="fs-5 ms-3">Expensas propietario</span>
+                          <span class="sidebar-text">Expensas propietario</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" [routerLink]="'admin-list-expensas'">
-                          <span class="fs-5 ms-3">Expensas administrador</span>
+                          <span class="sidebar-text">Expensas administrador</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" [routerLink]="'review-tickets-transfer'">
-                          <span class="fs-5 ms-3">Revisar Comprobantes</span>
+                          <span class="sidebar-text">Revisar Comprobantes</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" [routerLink]="'stadistics'">
-                            <span class="fs-5 ms-3">Estadísticas</span>
+                            <span class="sidebar-text">Estadísticas</span>
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
-  
+
         <!-- Main content - ocupa el 80% -->
         <div class="col-10">
             <router-outlet></router-outlet>
         </div>
     </div>
-  </div>
-  
+</div>

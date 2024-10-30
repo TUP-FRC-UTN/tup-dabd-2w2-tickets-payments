@@ -11,12 +11,12 @@ import { TransformTicketPipe } from '../pipes/ticket-mapper.pipe';
 })
 export class TicketService {
 
-  private apiUrl = 'http://localhost:8080/tickets';
+  private apiUrl = 'http://localhost:8085/tickets';
 
-  private apiUrlPdf = 'http://localhost:8080/tickets/generateTicket/'; 
+  private apiUrlPdf = 'http://localhost:8085/tickets/generateTicket/'; 
 
-  private api = 'http://localhost:8080/tickets/getAllTicketsByOwner';
-  private apiCounter = 'http://localhost:8080/tickets/getAll';
+  private api = 'http://localhost:8085/tickets/getAllTicketsByOwner';
+  private apiCounter = 'http://localhost:8085/tickets/getAll';
   
 
   constructor(private http: HttpClient) { }
@@ -28,7 +28,7 @@ export class TicketService {
 // Método para obtener todos los tickets
   getAllTickets(): Observable<TicketDto[]> 
   {
-    return this.http.get<TicketDto[]>('http://localhost:8080/tickets/getAll');
+    return this.http.get<TicketDto[]>('http://localhost:8085/tickets/getAll');
   }
 
   getAll(page : number, size : number): Observable<PaginatedResponse<TicketDto>> {
@@ -66,6 +66,8 @@ export class TicketService {
       })
     );
   }
+
+  // getAllForPDFUser()
 
   getAllByOwner(page : number, size : number): Observable<PaginatedResponse<TicketDto>> {
     let params = new HttpParams()

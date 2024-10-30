@@ -2,6 +2,8 @@ import { Component, inject, Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { PaymentExcelService } from '../services/payment-excel.service';
 import { TicketService } from '../services/ticket.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-ticket-payment-filter-buttons',
@@ -49,17 +51,34 @@ export class TicketPaymentFilterButtonsComponent<
    * Calls the `exportTableToPdf` method from the `CadastreExcelService`.
    */
   exportToPdf() {
-    this.ticketService.getAllTicketsPage(0, this.LIMIT_32BITS_MAX).subscribe(
+
+    const doc = new jsPDF();
+   
+    // Título del PDF
+    doc.setFontSize(18);
+    doc.text('Tickets Report', 14, 20);
+
+    this.ticketService.getAllTickets().subscribe(
       (response) => {
-        this.excelService.exportListToPdf(
-          response.content,
-          `${this.getActualDayFormat()}_${this.objectName}`
-        );
+        autoTable(doc, {
+          startY: 30,
+          head: [['Periodo', 'Vencimiento', 'Total', 'Estado']],
+          body: response.map(expense => [
+            expense.ownerId.first_name,
+            expense.issueDate instanceof Date ? expense.issueDate.toLocaleDateString() : expense.issueDate, // convertir fecha a string
+            expense.id,
+            expense.status
+          ]),
+        });
       },
       (error) => {
         console.log('Error retrieved all, on export component.');
       }
     );
+    
+
+       // Guardar el PDF después de agregar la tabla
+       doc.save('expenses_report.pdf');
   }
 
   /**
